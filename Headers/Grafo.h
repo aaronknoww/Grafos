@@ -11,6 +11,7 @@ public:
 	Grafo();
 	bool insertarNodo(string, TD );
 	bool buscarNodo(string);// Regresa true si se encuentra el nodo buscado.
+	bool buscarArista(string);// Regresa un true, si la arista se encuntra guaradada en su tabla.
 	bool sonAdyacentes(string, string); // Regresa true si los nodos estan unidos mediante una arista.
 	bool unir2Nodos(string, string, string, int);// Recibe el nombre del nodo1 y del nodo2, ademas del nombre del vertice.
 private:
@@ -19,14 +20,14 @@ private:
 	{
 	public:
 
-		//nodoV(string nombre) : nombre(nombre), sig(nullptr), dato(0){}
+		//nodoV(string nombre) : nombre(nombre), nodoSig(nullptr), dato(0){}
 		//~nodoV();
 		
-		nodoV() : nombreV(), sig(nullptr), edge(nullptr), dato(0){}
+		nodoV() : nombreV(), nodoSig(nullptr), listaEdge(nullptr), dato(0){}
 		string nombreV;
 		TD dato;
-		nodoV* sig; // por si es nencesario enlazar  un nodo
-		aristaE* edge;
+		nodoV* nodoSig; // por si es nencesario enlazar  un nodo
+		aristaE* listaEdge;
 	
 	private:
 
@@ -52,6 +53,7 @@ private:
 	
 	//--------------------------------- FUNCIONES PRIVADAS -------------------------------------//
 
-	bool _recorrerLista(aristaE*&, string&);
+	bool _listaBuscar(aristaE*, string&);// Busca en la lista de aristas del nodo.
+	bool _pushArista(nodoV*, aristaE*); // Regresa true cuando la arista se conceta en la pila del nodo.
 	
 };

@@ -51,6 +51,19 @@ bool Grafo<TD>::buscarNodo(string _nombreN)
 }
 
 template<typename TD>
+bool Grafo<TD>::buscarArista(string _nombreA)
+{
+	// _nombreA--> Recibe el nombre de la arista que se va a buscar.
+
+	auto iter1 = hashArista.find(_nombreA); // Se crea un iterador para buscar un nodo en la tabla hash
+	if (iter1 != hashArista.end())// Para saber si existe el nodo o vertice que se busca.
+		return true; // Si se encontro la Arista.
+	else
+		return false;// No se encontro la Arista.
+	
+}
+
+template<typename TD>
 bool Grafo<TD>::sonAdyacentes(string _nodo1, string _nodo2)
 {
 	// nodo1, nodo2--> Nombre o clave de nombre que se va analizar.
@@ -60,10 +73,10 @@ bool Grafo<TD>::sonAdyacentes(string _nodo1, string _nodo2)
 		//Entra aqui cuando existen los 2 nodos buscados.
 
 		nuevoNodo = hashNodo.at(_nodo1);// Para obtener la direccion del puntero donde se encuentra la clave buscada.
-		if(nuevoNodo->edge==nullptr)
+		if(nuevoNodo->listaEdge==nullptr)
 			return false;// no hay nodos adyacentes.
 		else
-			return _recorrerLista(nuevoNodo->edge, _nodo2);
+			return _listaBuscar(nuevoNodo->listaEdge, _nodo2);
 	}
 	else
 		return false;// Como almenos uno de los dos nodos no exite por eso no puede haber adyacencia.
@@ -76,26 +89,26 @@ bool Grafo<TD>::unir2Nodos(string _nodo1, string _nodo2, string _nArista, int _p
 	// nodo2-----> Ingresa el nombre de un nodo que ya debe de estar en el grafo.
 	// nVertice--> Ingresa el nombre que se le va asignar al vertice que se va a crear.
 
-	if (buscarNodo(_nodo1) && buscarNodo(_nodo2) && !sonAdyacentes(_nodo1,_nodo2))// Saber si existen los dos nodos y ademas no son adyacentes
+	if (buscarNodo(_nodo1) && buscarNodo(_nodo2) && !sonAdyacentes(_nodo1,_nodo2) && !buscarArista(_nArista))// Saber si existen los dos nodos y ademas no son adyacentes
 	{
-		// Entra porque existen los nodos y no estan unidos.
+		// Entra porque existen los nodos y no estan unidos, ademas el nombre de la arista no existe.
 		
 		nuevaArista = new aristaE();//--------> Crea espacio en memoria Heap.
 		nuevaArista->nombreA = _nArista;//----> Se le asigna nombre a la nueva arista.
 		nuevaArista->peso = _peso;
 	
-		nuevoNodo = hashNodo.at(_nodo1);// obtener la direccion del nodo 1
+		nuevoNodo = hashNodo.at(_nodo1);//----> obtener la direccion del nodo 1
 		nuevaArista->nodo1 = nuevoNodo; //----> Se conecta el nodo 1
-		nuevoNodo->edge = nuevaArista;  //----> El nodo apunta a su arista.
-
+		_pushArista(nuevoNodo, nuevaArista);//> Inserta en la lista de aristas del nodo. 
+		
 		nuevoNodo = hashNodo.at(_nodo2);//----> Obtener la direccion del nodo 2.
 		nuevaArista->nodo2 = nuevoNodo;//-----> Se conecta el nodo 2.
-		nuevoNodo->edge = nuevaArista;  //----> El nodo apunta a su arista.
+		_pushArista(nuevoNodo, nuevaArista);//> Inserta en la lista de aristas del nodo.
 
-
+		hashArista[_nArista] = nuevaArista;//-> Insertar con el operador[] como si fuera un vector o arreglo.
 		return true;
 	}
-	else
+	else// En este else, se podrian generar alertas para indicar porque no se pudo crear la union.
 		return false;
 }
 
@@ -103,7 +116,7 @@ bool Grafo<TD>::unir2Nodos(string _nodo1, string _nodo2, string _nArista, int _p
 //------------------------------- FUNCIONES AUXILIARES PRIVADAS ---------------------------//
 
 template<typename TD>
-bool Grafo<TD>::_recorrerLista(aristaE*& p_arista, string& _nodo2) // Regresa true si se encuentra el nombre del nodo 2 en la lista de aristas de nodo1.
+bool Grafo<TD>::_listaBuscar(aristaE* p_arista, string& _nodo2) // Regresa true si se encuentra el nombre del nodo 2 en la lista de aristas de nodo1.
 {
 	//p_arista--> Tiene la direccion de la primer arista que se va a comparar.
 	//nodo2---> Ingresa la clave o nombre del nodo que se quiere saber si es adyacente.
@@ -112,14 +125,39 @@ bool Grafo<TD>::_recorrerLista(aristaE*& p_arista, string& _nodo2) // Regresa tr
 		return false;// no hay nodos adyacentes.
 	else
 	{
-		//p_nodo->edge->nodo1->nombreV
+		
 		if (p_arista->nodo1->nombreV == _nodo2 || p_arista->nodo2->nombreV == _nodo2)// Busca dentro de la arista para saber si hay conectado un nodo con el nombre de la clave que se quiere conectar.
 			return true;
 		else
 		{
 			p_arista = p_arista->sig;// Para avanzar en la lista.
-			return _recorrerLista(p_arista, _nodo2);
+			return _listaBuscar(p_arista, _nodo2);
 		}
 	}
 
+}
+
+template<typename TD>
+bool Grafo<TD>::_pushArista(nodoV* _nodo, aristaE* _arista)// Inserta una arista en la lista de aristas del nodo involucrado.
+{
+	// _nodo----> Recibe la el puntero del nodo en el que se va a conectar la arista.
+	// _arista--> Recibe el puntero de la arista que va ingresar en la lista de aristas del nodo.
+
+	if (_nodo->listaEdge == nullptr)
+	{
+		_nodo->listaEdge = _arista;// Como no hay aristas, por eso se conecta directo.
+		return true;
+	}
+	else
+	{
+		//nodoV* aux;
+		//aux = new nodoV();
+		
+		aristaE* aux = nullptr;
+		aux = _nodo->listaEdge;//---> Auxiliar toma la direccion de la lista del nodo para no perderla
+		_nodo->listaEdge = _arista;// ----> Se inserta la Arista en al inicio de la lista.
+		_nodo->listaEdge->sig = aux;//----> Se concta la arista nueva a la lista que ya existia.
+		return true;
+	}
+	return false;
 }
