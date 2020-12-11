@@ -13,6 +13,7 @@ int main()
 	Grafo<int> G;
 	vector<int> vec;
 	vec.push_back(1125);
+	
 
 	
 	G.insertarNodo("Aaron", 19);
@@ -20,12 +21,11 @@ int main()
 	G.insertarNodo("Cruz", 19);
 	G.insertarNodo("Azul", 14);
 	G.unir2Nodos("Aaron", "Knoww","A1",10);
+	G.borrarArista("A1");
 	G.unir2Nodos("Aaron", "Azul","A2",10);
 	//NOTA
-	//probar si se inserta nodo A-B y B-A que solo se pueda insertar 1.------ LISTO
-	//falta probar cuando se insertan mas de dos nodos y saber si son adyacentes.---- LISTO
-	//Ejecutar el programa asi como esta y ver si se borra la listaEdge de Aaron.-- listo
-
+	//Despues de borrar Arista y tratar de insertar otra arista marca error por desreferenciar un puntero. revisar.
+	
 	//Falta eliminar nodo y arista. borrando todos los punteros que sea nesesario borrar.
 
 

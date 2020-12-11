@@ -10,13 +10,15 @@ class Grafo
 public:
 	Grafo();
 	bool insertarNodo(string, TD );
-	bool buscarNodo(string);// Regresa true si se encuentra el nodo buscado.
-	bool buscarArista(string);// Regresa un true, si la arista se encuntra guaradada en su tabla.
-	bool sonAdyacentes(string, string); // Regresa true si los nodos estan unidos mediante una arista.
-	bool unir2Nodos(string, string, string, int);// Recibe el nombre del nodo1 y del nodo2, ademas del nombre del vertice.
+	bool buscarNodo(string);//----------------------> Regresa true si se encuentra el nodo buscado.
+	bool buscarArista(string);//--------------------> Regresa un true, si la arista se encuntra guaradada en su tabla.
+	bool sonAdyacentes(string, string); //----------> Regresa true si los nodos estan unidos mediante una arista.
+	bool unir2Nodos(string, string, string, int);//-> Recibe el nombre del nodo1 y del nodo2, ademas del nombre del vertice.
+	bool eliminarNodo(string);//--------------------> Elimina un nodo(vertice) y borra todas sus aristas y conecciones.
+	bool borrarArista(string);//--------------------> Elimina la arista y todos los punteros relacionados asi como actualiza la lista de edge, de los nodo. 
 private:
-	class aristaE;// Para que el compilador sepa que existe esa clase antes de implementarla
-	class nodoV // Clase para crear los vertices o nodos de un grafo.
+	class aristaE;//--> Para que el compilador sepa que existe esa clase antes de implementarla
+	class nodoV //----> Clase para crear los vertices o nodos de un grafo.
 	{
 	public:
 
@@ -55,5 +57,6 @@ private:
 
 	bool _listaBuscar(aristaE*, string&);// Busca en la lista de aristas del nodo.
 	bool _pushArista(nodoV*, aristaE*); // Regresa true cuando la arista se conceta en la pila del nodo.
+	bool _desconectarA(aristaE*&, string&);// Recorre lista de arista y ademas borra la arista buscada, ademas reconecta en caso de ser necesario.
 	
 };

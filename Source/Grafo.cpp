@@ -112,8 +112,49 @@ bool Grafo<TD>::unir2Nodos(string _nodo1, string _nodo2, string _nArista, int _p
 		return false;
 }
 
+template<typename TD>
+bool Grafo<TD>::eliminarNodo(string _nodo)
+{
+	// _nodo---> Recibe el nombre del nodo que se quiere eliminar.
+	if (buscarNodo(_nodo))
+	{
+		return true;
+	}
+	else
+		return false;
+}
 
-//------------------------------- FUNCIONES AUXILIARES PRIVADAS ---------------------------//
+template<typename TD>
+bool Grafo<TD>::borrarArista(string _claveA)
+{
+	//claveA---> Ingresa el nombre o clave de la arista que se va eliminar.
+
+	if (buscarArista(_claveA))
+	{
+		// Entra porque si existe esa clave o arista.
+		
+		nuevaArista = hashArista.at(_claveA);//--------> Para obtener la direccion del puntero donde se encuentra la clave buscada.
+
+		//nuevaArista->nodo1->listaEdge--> la direccion del primer arista de la listaEdge.
+		_desconectarA(nuevaArista->nodo1->listaEdge, _claveA);//-----> desconecta la arista del nodo1
+		_desconectarA(nuevaArista->nodo2->listaEdge, _claveA);//-----> desconecta la arista del nodo2
+
+		//------- Se libera memoria heap donde se encuntra la arista a borrar.--------//
+		nuevaArista->nodo2= nullptr;
+		nuevaArista->sig  = nullptr;
+		nuevaArista->nodo1= nullptr;
+		delete nuevaArista;//--------> Se libera esa posicion de memori hash.
+		nuevaArista = nullptr;//-----> Se apunta a null para evitar desreferenciar un puntero que no apunta a nada.
+		
+		hashArista.erase(_claveA);//--------------------------> Elimina la clave de la tabla hash.
+		return true;
+	}
+	else
+		return false;
+}
+
+
+//----------------------------------- FUNCIONES AUXILIARES PRIVADAS --------------------------------//
 
 template<typename TD>
 bool Grafo<TD>::_listaBuscar(aristaE* p_arista, string& _nodo2) // Regresa true si se encuentra el nombre del nodo 2 en la lista de aristas de nodo1.
@@ -159,5 +200,23 @@ bool Grafo<TD>::_pushArista(nodoV* _nodo, aristaE* _arista)// Inserta una arista
 		_nodo->listaEdge->sig = aux;//----> Se concta la arista nueva a la lista que ya existia.
 		return true;
 	}
+	return false;
+}
+
+template<typename TD>
+bool Grafo<TD>::_desconectarA(aristaE*& _inicioL, string& _nArista)// Desconecta la arista en la lista de un nodo.
+{
+	// inicioL---> Recibe la direccion inicial de la lista para empezar a recorrerla.
+	// nArista---> Nombre de la arista que se va a desconectar de la lista de aristas del nodo.
+
+	if (_inicioL->nombreA == _nArista)
+	{
+		//Entra porque es la arista que se va a desconectar.
+		_inicioL = _inicioL->sig;//---> Conceta con lo que haya despues de la arista que se va a desconectar.
+		return true;
+	}
+	else
+		return _desconectarA(_inicioL = _inicioL->sig, _nArista);// Avanza a la siguiente posicion de la lista.
+		
 	return false;
 }
