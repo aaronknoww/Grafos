@@ -25,11 +25,12 @@ private:
 		//nodoV(string nombre) : nombre(nombre), nodoSig(nullptr), dato(0){}
 		//~nodoV();
 		
-		nodoV() : nombreV(), nodoSig(nullptr), listaEdge(nullptr), dato(0){}
+		nodoV() : nombreV(), dato(0){}
 		string nombreV;
 		TD dato;
-		nodoV* nodoSig; // por si es nencesario enlazar  un nodo
-		aristaE* listaEdge;
+		set<string> setLista;// Se guarda el nombre o clave de las aristas que tiene el nodo.
+		
+
 	
 	private:
 
@@ -37,13 +38,12 @@ private:
 	class aristaE
 	{
 	public:
-		aristaE(): nombreA(), peso(0), nodo1(nullptr), nodo2(nullptr), sig(nullptr){}
+		aristaE(): nombreA(), peso(0), nodo1(nullptr), nodo2(nullptr){}
 
 		string nombreA;
 		int peso;
 		nodoV * nodo1; // Guarda la direccion del nodo1 o vertice que se conecta en esta arista
 		nodoV * nodo2; // Guarda la direccion del nodo2 o vertice que se conecta en esta arista
-		aristaE* sig; //  Para poder enlazar otro nodo.
 	};
 	
 	unordered_map<string, nodoV*> hashNodo; // Se utiliza una tabla hash para guardar los nodos utilizando su nombre.
@@ -55,8 +55,6 @@ private:
 	
 	//--------------------------------- FUNCIONES PRIVADAS -------------------------------------//
 
-	bool _listaBuscar(aristaE*, string&);// Busca en la lista de aristas del nodo.
-	bool _pushArista(nodoV*, aristaE*); // Regresa true cuando la arista se conceta en la pila del nodo.
-	bool _desconectarA(aristaE*&, string&);// Recorre lista de arista y ademas borra la arista buscada, ademas reconecta en caso de ser necesario.
+	bool _listaBuscar(nodoV*&, string&);// Busca en la lista de aristas del nodo.
 	
 };

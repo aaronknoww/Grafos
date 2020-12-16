@@ -20,9 +20,14 @@ int main()
 	G.insertarNodo("Knoww", 14);
 	G.insertarNodo("Cruz", 19);
 	G.insertarNodo("Azul", 14);
+	G.sonAdyacentes("Aaron", "Knoww");
 	G.unir2Nodos("Aaron", "Knoww","A1",10);
-	G.borrarArista("A1");
 	G.unir2Nodos("Aaron", "Azul","A2",10);
+	G.unir2Nodos("Aaron", "Cruz","A3",10);
+	G.unir2Nodos("Knoww", "Azul","A4",10);
+	G.unir2Nodos("Knoww", "Azul","A4",10);
+	//G.eliminarNodo("Aaron");
+	//G.borrarArista("A1");
 	//NOTA
 	//Despues de borrar Arista y tratar de insertar otra arista marca error por desreferenciar un puntero. revisar.
 	
@@ -30,7 +35,7 @@ int main()
 
 
 	
-	if (G.unir2Nodos("Aaron", "Cruz", "A3", 10))
+	if (G.unir2Nodos("Cruz", "Aaron", "A8", 10))
 		cout << "\n\n union correcta" << endl;
 	else
 		cout << "\n\nNo se pudo unir esos nodos" << endl;
