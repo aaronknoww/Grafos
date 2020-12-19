@@ -15,8 +15,58 @@ int main()
 	vec.push_back(1125);
 	
 
+	G.insertarNodo("A",14);
+	G.insertarNodo("B",10);
+	G.insertarNodo("C",9);
+	G.insertarNodo("D",2);
+	G.insertarNodo("E",4);
+	G.insertarNodo("F",4);
+	G.insertarNodo("G",4);
+	G.insertarNodo("H",4);
+	G.insertarNodo("I",4);
 	
-	G.insertarNodo("Aaron", 19);
+	// KRUSKAL GRAFO 1 FUNCIONA
+	G.unir2Nodos("A", "B","AB", 4);
+	G.unir2Nodos("A", "E","AE", 5);
+	G.unir2Nodos("B", "E","AB", 6);
+	G.unir2Nodos("B", "C","BC", 8);
+	G.unir2Nodos("A", "C","AC", 9);
+	G.unir2Nodos("C", "D","CD", 10);
+	G.unir2Nodos("A", "D","AD", 11);
+	G.unir2Nodos("D", "E","DE", 12);
+
+	//KRUSKAL GRAFO 2 FUNCIONA
+	/*G.unir2Nodos("A", "B", "AB", 4);
+	G.unir2Nodos("A", "E", "AE", 4);
+	G.unir2Nodos("B", "E", "AB", 4);
+	G.unir2Nodos("B", "C", "BC", 4);
+	G.unir2Nodos("A", "C", "AC", 4);
+	G.unir2Nodos("C", "D", "CD", 4);
+	G.unir2Nodos("A", "D", "AD", 4);
+	G.unir2Nodos("D", "E", "DE", 4);*/
+
+	
+	// GRAFO 3 FUNCIONA.
+	/*G.unir2Nodos("A", "B", "AB", 6);
+	G.unir2Nodos("A", "D", "AD", 10);
+	G.unir2Nodos("A", "G", "AG", 8);
+	G.unir2Nodos("B", "C", "BC", 11);
+	G.unir2Nodos("B", "E", "BE", 15);
+	G.unir2Nodos("B", "H", "BH", 13);
+	G.unir2Nodos("C", "H", "CH", 4);
+	G.unir2Nodos("D", "E", "DE", 6);
+	G.unir2Nodos("E", "F", "EF", 2);
+	G.unir2Nodos("F", "G", "FG", 4);
+	G.unir2Nodos("F", "I", "FI", 6);
+	G.unir2Nodos("G", "H", "GH", 5);
+	G.unir2Nodos("G", "I", "GI", 5);
+	G.unir2Nodos("H", "I", "HI", 7);*/
+
+				
+	G.kruskalAlgorithm();
+
+	G.buscarNodo("A");
+	/*G.insertarNodo("Aaron", 19);
 	G.insertarNodo("Knoww", 14);
 	G.insertarNodo("Cruz", 19);
 	G.insertarNodo("Azul", 14);
@@ -25,7 +75,7 @@ int main()
 	G.unir2Nodos("Aaron", "Azul","A2",10);
 	G.unir2Nodos("Aaron", "Cruz","A3",10);
 	G.unir2Nodos("Knoww", "Azul","A4",10);
-	G.unir2Nodos("Knoww", "Azul","A4",10);
+	G.unir2Nodos("Knoww", "Azul","A4",10);*/
 	//G.eliminarNodo("Aaron");
 	//G.borrarArista("A1");
 	//NOTA
@@ -35,7 +85,7 @@ int main()
 
 
 	
-	if (G.unir2Nodos("Cruz", "Aaron", "A8", 10))
+	/*if (G.unir2Nodos("Cruz", "Aaron", "A8", 10))
 		cout << "\n\n union correcta" << endl;
 	else
 		cout << "\n\nNo se pudo unir esos nodos" << endl;
@@ -43,7 +93,7 @@ int main()
 		cout << "\n\n union correcta" << endl;
 	else
 		cout << "\n\nNo se pudo unir esos nodos" << endl;
-	
+	*/
 	/*G.insertarNodo("Knoww", 14);
 	G.sonAdyacentes("Aaron", "Knoww");
 	if (G.buscarNodo("Aaroon"))

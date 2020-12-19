@@ -179,6 +179,26 @@ bool Grafo<TD>::borrarArista(string _claveA)
 		return false;
 }
 
+template<typename TD>
+bool Grafo<TD>::kruskalAlgorithm()
+{
+	if (hashArista.size() > 0)// Hay almenos una arista.
+	{
+		_ordenarAristas();// Inserta las aristas en un multimap que ademas las ordena por peso.
+		for (auto iter = aristasOrdenadas.begin(); iter != aristasOrdenadas.end(); iter++)// Recorre todo el arreglo de aristas (multimap).
+		{
+			// aristasOrdenadas first--> peso, second--> string;
+
+			nuevaArista = hashArista.at(iter->second);// Se obtiene la direccion de la arista por medio de su nombre.
+			_unionNodo(nuevaArista);
+		}
+		return true;
+
+	}
+	else
+		return false;
+}
+
 
 //----------------------------------- FUNCIONES AUXILIARES PRIVADAS --------------------------------//
 
@@ -199,5 +219,86 @@ bool Grafo<TD>::_listaBuscar(nodoV*& _p_nodo, string& _nodo2) // Regresa true si
 	}
 	return false;// Como termino de recorrer el arreglo quiere decir que no hay adyacencia.
 
+}
+
+template<typename TD>
+bool Grafo<TD>::_ordenarAristas()
+{
+	//for each (auto x in hashArista)
+	//{
+	//	aristaKruskal.insert(x->second->peso, x->first);
+	//}
+	
+	typedef pair<int, string> par;
+	for (auto iter = hashArista.begin(); iter!= hashArista.end(); iter++)
+	{		
+		aristasOrdenadas.insert(par(iter->second->peso, iter->first));// Guarda le peso y con ese se ordena y el nombre de la clave.
+	}
+	return true;
+}
+
+template<typename TD>
+bool Grafo<TD>::_unionNodo(aristaE*& _arista)
+{
+
+	if (_arista->nodo1->sig == nullptr && _arista->nodo2->sig == nullptr)
+	{
+		//Como no pertence a ningun conjunto se hace la union y se agrega a lista de kruskal 
+
+		_arista->nodo1->sig = _arista->nodo1;//-----------> El nodo 1 se convierte en la clave de este conjunto.
+		_arista->nodo2->sig = _arista->nodo1->sig;//------> El nodo 2 se une a ese conjunto apuntado a lo que apunte sig del nodo clave.
+		listKruskal.push_back(_arista->nombreA);//--------> Se inserta la arista que formara parte del MST
+		return true;
+	}
+	else
+	{
+		if (_arista->nodo1->sig != nullptr && _arista->nodo2->sig == nullptr)// Nodo 1 pertenece a un conjunto y nodo 2 no pertenece a ningun conjuno.
+		{
+			_arista->nodo2->sig = _arista->nodo1->sig;//-----> El nodo 2 apunta a el puntero sig de el nodo clave del conjunto.
+			listKruskal.push_back(_arista->nombreA);//---> Se inserta la arista que formara parte del MST
+			return true;
+		}
+		else if (_arista->nodo1->sig == nullptr && _arista->nodo2->sig != nullptr)//-------> Nodo 2 pertenece a un conjunto por eso se 
+		{
+			// Como nodo 1 esta vacio se conecta al conjunto de nodo 2
+			_arista->nodo1->sig = _arista->nodo2->sig;//------------> Nodo 1 se conecta a sig de nodo 2, que es el nodo clave.
+			listKruskal.push_back(_arista->nombreA);//---> Se inserta la arista que formara parte del MST
+			return true;
+		}
+		else// Ambos nodos apuntan a algo diferente de nullptr.
+		{
+			if (_arista->nodo1->sig->nombreV != _arista->nodo2->sig->nombreV)// Verifica los nombres de los nodos claves para saber si pertence al mismo conjunto.
+			{
+
+				typedef pair<int, string> par;
+				for (auto iter = hashNodo.begin(); iter != hashNodo.end(); iter++)// Recorre todo el hashNodo
+				{
+					if (iter->second != _arista->nodo1 && iter->second != _arista->nodo2)
+					{
+						if (iter->second->sig != nullptr)//En caso de que sig apunte a null, no se podria comparar con una cadena.
+						{
+							if (iter->second->sig->nombreV == _arista->nodo2->sig->nombreV)//Para saber si hay nodo que estan conectados al nodo que se va a unir 
+								iter->second->sig = _arista->nodo1->sig;// Actualiza la direccion de los nodos que se van a unir.
+						}
+
+					}
+
+				}
+				_arista->nodo2->sig = _arista->nodo1->sig; //--> Actualiza el puntero sig.
+				listKruskal.push_back(_arista->nombreA);//----------> Se inserta la arista que formara parte del MST
+				return true;
+
+
+
+			}
+			else
+			{
+				// Como pertenecen al mismo conjunto no se agrega al MST
+				return false;
+			}
+		}
+
+	}
+	return false;
 }
 
