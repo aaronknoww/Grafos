@@ -18,6 +18,8 @@ public:
 	bool borrarArista(string);//--------------------> Elimina la arista y todos los punteros relacionados asi como actualiza la lista de edge, de los nodo. 
 	bool kruskalAlgorithm();//----------------------> Ejecuta ese algoritmo para calcular el Minimum ST del grafo.
 	bool primsAlgorithm(const string&);//-----------> Ejecuta este algoritmo solo para calcular el Minimum Spannig Tree.
+	int  pesoKruskal();//---------------------------> Calcula el peso de todas las aristas en la lista de kruskal.
+	int  pesoPrim();//------------------------------> Calcula el peso de todas las aristas en la lista de kruskal.
 
 	vector<string> listKruskal;//-------------------> Guarda las aristas que forman el minimum spanning tree.
 	vector<string> listaPrim;//---------------------> Guarda las aristas que forman el minimum spanning tree de prim.

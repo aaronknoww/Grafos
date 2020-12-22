@@ -281,6 +281,40 @@ bool Grafo<TD>::primsAlgorithm(const string& _inicio)
 		return false;
 }
 
+template<typename TD>
+int Grafo<TD>::pesoKruskal()
+{
+	int sum = 0;
+	if (listKruskal.size() > 0)
+	{
+		for (auto iter = listKruskal.begin(); iter != listKruskal.end(); iter++)
+		{
+			nuevaArista = hashArista.at(*iter);
+			sum += nuevaArista->peso;
+		}
+		return sum;
+	}
+	else
+		return 0;
+}
+
+template<typename TD>
+int Grafo<TD>::pesoPrim()
+{
+	int sum = 0;
+	if (listaPrim.size() > 0)
+	{
+		for (auto iter = listaPrim.begin(); iter != listaPrim.end(); iter++)
+		{
+			nuevaArista = hashArista.at(*iter);
+			sum += nuevaArista->peso;
+		}
+		return sum;
+	}
+	else
+		return 0;
+}
+
 
 //----------------------------------- FUNCIONES AUXILIARES PRIVADAS --------------------------------//
 

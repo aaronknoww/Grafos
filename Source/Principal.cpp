@@ -89,6 +89,8 @@ int main()
 
 	G.kruskalAlgorithm();
 	G.primsAlgorithm("A");
+	cout << "\nEl peso de kruskal es " << G.pesoKruskal() << endl;
+	cout << "\nEl peso de Prim es " << G.pesoPrim() << endl;
 
 				
 	
