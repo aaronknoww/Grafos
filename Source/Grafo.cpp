@@ -184,15 +184,97 @@ bool Grafo<TD>::kruskalAlgorithm()
 {
 	if (hashArista.size() > 0)// Hay almenos una arista.
 	{
+		_inicializarNodo();
 		_ordenarAristas();// Inserta las aristas en un multimap que ademas las ordena por peso.
 		for (auto iter = aristasOrdenadas.begin(); iter != aristasOrdenadas.end(); iter++)// Recorre todo el arreglo de aristas (multimap).
 		{
 			// aristasOrdenadas first--> peso, second--> string;
 
 			nuevaArista = hashArista.at(iter->second);// Se obtiene la direccion de la arista por medio de su nombre.
-			_unionNodo(nuevaArista);
+			_unionNodoKruskal(nuevaArista);
 		}
 		return true;
+
+	}
+	else
+		return false;
+}
+
+template<typename TD>
+bool Grafo<TD>::primsAlgorithm(const string& _inicio)
+{
+	// inicio--> Recibe el nombre del nodo donde se va iniciar el algoritmo.
+
+	if (hashArista.size()>0)// Verifica que haya por lo menos una arista.
+	{
+		_inicializarNodo();
+		unsigned int contaNodos=0;// Para saber cuantos nodos se han visitados.
+		nodoV* nodop=nullptr;
+		aristasOrdenadas.clear();//---------------> Incializa el contenedor en caso de que haya sido utilizado antes.
+		nodop = hashNodo.at(_inicio);//-----------> Se obtiene la direccion del nodo en el que se va inciar.
+		nodop->sig = nodop;//---------------------> Se auto apunta para convertirse en nodo clave del conjunto.
+		_agregarAristaPrism(nodop);//-------------> Guarda en aristas ordenadas las aristas del nodo enviado.
+		auto i = aristasOrdenadas.begin();//------> Se obtien el puntero a la primera posision del arreglo de aristas.
+		nuevaArista = hashArista.at(i->second);//->
+		contaNodos++;// Se visito el primer nodo.
+		_unionNodoPrim(nuevaArista);
+		if (nuevaArista->nodo1->nombreV != nodop->nombreV)// Se agregan las aristas del segundo nodo.
+			_agregarAristaPrism(nuevaArista->nodo1);
+		else
+			_agregarAristaPrism(nuevaArista->nodo2);
+		contaNodos++;//---------------------> Se visito el segundo nodo.
+
+		//NOTA: Como no se borran las aristas repetidas, el while se va ejecutar 2 veces extra para borrarlas
+				
+		while (hashNodo.size()>contaNodos)// Para saber si se visitaron todos los nodos.
+		{
+			//multimap<int, string> iter = aristasOrdenadas.begin();
+			auto iter = aristasOrdenadas.begin();// Se obtien el puntero a la primera posision del arreglo de aristas.
+			aristaE *aristap = hashArista.at(iter->second);
+			string claveA = iter->second;// Guarda el nombre de la arista que se va agregar.
+			
+			if (aristap->nodo1->sig == nullptr)
+				nodop = aristap->nodo1;// Toma la direccion del nodo que se va a copiar su lista de aristas.
+			else if (aristap->nodo2->sig == nullptr)
+				nodop = aristap->nodo2;// Toma la direccion del nodo que se va a copiar su lista de aristas.
+			
+			if (_unionNodoPrim(aristap))
+			{
+				if (aristap->nodo1 == nodop)
+					_agregarAristaPrism(aristap->nodo1);
+				else if (aristap->nodo2 == nodop)
+					_agregarAristaPrism(aristap->nodo2);
+				else
+					break;// En caso de un error.
+				
+				int conta = 0;
+				auto interno = aristasOrdenadas.find(aristap->peso);// Busca la arista por medio de la clave del mapa, que en este caso es el peso.
+				while (conta < 2)
+				{
+					if (interno->second == claveA)
+					{
+						aristasOrdenadas.erase(interno);//Borra solo la posision a la que apunta el iterador.
+						interno = aristasOrdenadas.begin();
+						conta++;
+
+						
+					}
+					else
+						interno++;
+				}
+				contaNodos++;// 
+
+			}
+			else
+			{
+				// No se pudo insertar la arista a la que apunta el iterador.
+				aristasOrdenadas.erase(iter);// Se borra la clave para poder avanzar en el arreglo.
+			}
+
+		}
+		return true;
+
+		
 
 	}
 	else
@@ -224,13 +306,9 @@ bool Grafo<TD>::_listaBuscar(nodoV*& _p_nodo, string& _nodo2) // Regresa true si
 template<typename TD>
 bool Grafo<TD>::_ordenarAristas()
 {
-	//for each (auto x in hashArista)
-	//{
-	//	aristaKruskal.insert(x->second->peso, x->first);
-	//}
-	
+	aristasOrdenadas.clear();// Como este contenedor se va utilizar en diferentes funciones, se debe limpiar para evitar errores.
 	typedef pair<int, string> par;
-	for (auto iter = hashArista.begin(); iter!= hashArista.end(); iter++)
+	for (auto iter = hashArista.begin(); iter!= hashArista.end(); iter++)// Recorre todo el arreglo de aristas.
 	{		
 		aristasOrdenadas.insert(par(iter->second->peso, iter->first));// Guarda le peso y con ese se ordena y el nombre de la clave.
 	}
@@ -238,7 +316,7 @@ bool Grafo<TD>::_ordenarAristas()
 }
 
 template<typename TD>
-bool Grafo<TD>::_unionNodo(aristaE*& _arista)
+bool Grafo<TD>::_unionNodoKruskal(aristaE*& _arista)
 {
 
 	if (_arista->nodo1->sig == nullptr && _arista->nodo2->sig == nullptr)
@@ -300,5 +378,104 @@ bool Grafo<TD>::_unionNodo(aristaE*& _arista)
 
 	}
 	return false;
+}
+
+template<typename TD>
+bool Grafo<TD>::_unionNodoPrim(aristaE*& _arista)
+{
+	if (_arista->nodo1->sig == nullptr && _arista->nodo2->sig == nullptr)
+	{
+		//Como no pertence a ningun conjunto se hace la union y se agrega a lista de kruskal 
+
+		_arista->nodo1->sig = _arista->nodo1;//-----------> El nodo 1 se convierte en la clave de este conjunto.
+		_arista->nodo2->sig = _arista->nodo1->sig;//------> El nodo 2 se une a ese conjunto apuntado a lo que apunte sig del nodo clave.
+		listaPrim.push_back(_arista->nombreA);//--------> Se inserta la arista que formara parte del MST
+		
+		return true;
+	}
+	else
+	{
+		if (_arista->nodo1->sig != nullptr && _arista->nodo2->sig == nullptr)// Nodo 1 pertenece a un conjunto y nodo 2 no pertenece a ningun conjuno.
+		{
+			_arista->nodo2->sig = _arista->nodo1->sig;//-----> El nodo 2 apunta a el puntero sig de el nodo clave del conjunto.
+			listaPrim.push_back(_arista->nombreA);//---> Se inserta la arista que formara parte del MST
+			return true;
+		}
+		else if (_arista->nodo1->sig == nullptr && _arista->nodo2->sig != nullptr)//-------> Nodo 2 pertenece a un conjunto por eso se 
+		{
+			// Como nodo 1 esta vacio se conecta al conjunto de nodo 2
+			_arista->nodo1->sig = _arista->nodo2->sig;//------------> Nodo 1 se conecta a sig de nodo 2, que es el nodo clave.
+			listaPrim.push_back(_arista->nombreA);//---> Se inserta la arista que formara parte del MST
+			return true;
+		}
+		else// Ambos nodos apuntan a algo diferente de nullptr.
+		{
+			if (_arista->nodo1->sig->nombreV != _arista->nodo2->sig->nombreV)// Verifica los nombres de los nodos claves para saber si pertence al mismo conjunto.
+			{
+
+				typedef pair<int, string> par;
+				for (auto iter = hashNodo.begin(); iter != hashNodo.end(); iter++)// Recorre todo el hashNodo
+				{
+					if (iter->second != _arista->nodo1 && iter->second != _arista->nodo2)
+					{
+						if (iter->second->sig != nullptr)//En caso de que sig apunte a null, no se podria comparar con una cadena.
+						{
+							if (iter->second->sig->nombreV == _arista->nodo2->sig->nombreV)//Para saber si hay nodo que estan conectados al nodo que se va a unir 
+								iter->second->sig = _arista->nodo1->sig;// Actualiza la direccion de los nodos que se van a unir.
+						}
+
+					}
+
+				}
+				_arista->nodo2->sig = _arista->nodo1->sig; //--> Actualiza el puntero sig.
+				listaPrim.push_back(_arista->nombreA);//----------> Se inserta la arista que formara parte del MST
+				return true;
+
+
+
+			}
+			else
+			{
+				// Como pertenecen al mismo conjunto no se agrega al MST
+				return false;
+			}
+		}
+
+	}
+	return false;
+	return false;
+}
+
+template<typename TD>
+bool Grafo<TD>::_agregarAristaPrism(nodoV* _nodo)
+{
+
+	if (_nodo->setLista.size() > 0)
+	{
+		
+		for (set<string>::iterator it = _nodo->setLista.begin(); it != _nodo->setLista.end(); it++)// Se agregan las aristas que contiene el nodo.
+		{
+			nuevaArista = hashArista.at(*it);// Obtengo la direccion de la arista en memoria.
+			aristasOrdenadas.insert(pair<int,string>(nuevaArista->peso, nuevaArista->nombreA));// Se insertan ordenas por peso.
+		}
+		return true;
+	}
+	else
+		return false;
+
+	
+}
+
+template<typename TD>
+bool Grafo<TD>::_inicializarNodo()
+{
+	if (hashNodo.size() > 1)
+	{
+		for (auto iter = hashNodo.begin(); iter != hashNodo.end(); iter++)
+			iter->second->sig = nullptr;
+		return true;
+	}
+	else
+		return false;
 }
 

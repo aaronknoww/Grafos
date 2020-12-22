@@ -16,9 +16,11 @@ public:
 	bool unir2Nodos(string, string, string, int);//-> Recibe el nombre del nodo1 y del nodo2, ademas del nombre del vertice.
 	bool eliminarNodo(string);//--------------------> Elimina un nodo(vertice) y borra todas sus aristas y conecciones.
 	bool borrarArista(string);//--------------------> Elimina la arista y todos los punteros relacionados asi como actualiza la lista de edge, de los nodo. 
-	bool kruskalAlgorithm();//----------------------> Ejecuta ese algoritom para calcular el MST del grafo.
+	bool kruskalAlgorithm();//----------------------> Ejecuta ese algoritmo para calcular el Minimum ST del grafo.
+	bool primsAlgorithm(const string&);//-----------> Ejecuta este algoritmo solo para calcular el Minimum Spannig Tree.
 
 	vector<string> listKruskal;//-------------------> Guarda las aristas que forman el minimum spanning tree.
+	vector<string> listaPrim;//---------------------> Guarda las aristas que forman el minimum spanning tree de prim.
 private:
 	class aristaE;//--> Para que el compilador sepa que existe esa clase antes de implementarla
 	class nodoV //----> Clase para crear los vertices o nodos de un grafo.
@@ -60,8 +62,10 @@ private:
 	
 	//--------------------------------- FUNCIONES PRIVADAS -------------------------------------//
 
-	bool _listaBuscar(nodoV*&, string&);//--------> Busca en la lista de aristas del nodo.
-	bool _ordenarAristas();//---------------------> Ordena todas las aristas guardadas hasta el momento.
-	bool _unionNodo(aristaE*&);//-----------------> Verifica si se puede unir los nodos y los agrega a lista kruskal
-	
+	bool _listaBuscar(nodoV*&, string&);//----> Busca en la lista de aristas del nodo.
+	bool _ordenarAristas();//-----------------> Ordena todas las aristas guardadas hasta el momento.
+	bool _unionNodoKruskal(aristaE*&);//------> Verifica si se puede unir los nodos y los agrega a lista kruskal
+	bool _unionNodoPrim(aristaE*&);//---------> Verifica si se puede unir los nodos y los agrega a lista kruskal
+	bool _agregarAristaPrism(nodoV*);//-------> Agraga las aristas del nodo a una tabla de aristas ordenadas por peso. 
+	bool _inicializarNodo();//----------------> Inicializa todo los punteros sig de los nodos.
 };

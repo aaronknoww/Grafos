@@ -10,10 +10,35 @@ int main()
 {
 	//Myhash<int> tabla;
 	
-	Grafo<int> G;
+	Grafo<int> G,gNum;
 	vector<int> vec;
 	vec.push_back(1125);
 	
+	gNum.insertarNodo("0", 10);
+	gNum.insertarNodo("1", 11);
+	gNum.insertarNodo("2", 22);
+	gNum.insertarNodo("3", 33);
+	gNum.insertarNodo("4", 44);
+	gNum.insertarNodo("5", 55);
+	gNum.insertarNodo("6", 66);
+	gNum.insertarNodo("7", 77);
+
+	gNum.unir2Nodos("0", "1", "01", 10);
+	gNum.unir2Nodos("0", "2", "02", 1);
+	gNum.unir2Nodos("0", "3", "03", 4);
+	gNum.unir2Nodos("2", "1", "21", 3);
+	gNum.unir2Nodos("2", "5", "25", 8);
+	gNum.unir2Nodos("2", "3", "23", 2);
+	gNum.unir2Nodos("3", "5", "35", 2);
+	gNum.unir2Nodos("3", "6", "36", 7);
+	gNum.unir2Nodos("5", "4", "54", 1);
+	gNum.unir2Nodos("5", "7", "57", 9);
+	gNum.unir2Nodos("5", "6", "56", 7);
+	gNum.unir2Nodos("4", "1", "41", 0);
+	gNum.unir2Nodos("4", "7", "47", 8);
+
+	gNum.kruskalAlgorithm();
+	gNum.buscarNodo("4");
 
 	G.insertarNodo("A",14);
 	G.insertarNodo("B",10);
@@ -26,14 +51,14 @@ int main()
 	G.insertarNodo("I",4);
 	
 	// KRUSKAL GRAFO 1 FUNCIONA
-	G.unir2Nodos("A", "B","AB", 4);
+	/*G.unir2Nodos("A", "B","AB", 4);
 	G.unir2Nodos("A", "E","AE", 5);
 	G.unir2Nodos("B", "E","AB", 6);
 	G.unir2Nodos("B", "C","BC", 8);
 	G.unir2Nodos("A", "C","AC", 9);
 	G.unir2Nodos("C", "D","CD", 10);
 	G.unir2Nodos("A", "D","AD", 11);
-	G.unir2Nodos("D", "E","DE", 12);
+	G.unir2Nodos("D", "E","DE", 12);*/
 
 	//KRUSKAL GRAFO 2 FUNCIONA
 	/*G.unir2Nodos("A", "B", "AB", 4);
@@ -47,7 +72,7 @@ int main()
 
 	
 	// GRAFO 3 FUNCIONA.
-	/*G.unir2Nodos("A", "B", "AB", 6);
+	G.unir2Nodos("A", "B", "AB", 6);
 	G.unir2Nodos("A", "D", "AD", 10);
 	G.unir2Nodos("A", "G", "AG", 8);
 	G.unir2Nodos("B", "C", "BC", 11);
@@ -60,11 +85,13 @@ int main()
 	G.unir2Nodos("F", "I", "FI", 6);
 	G.unir2Nodos("G", "H", "GH", 5);
 	G.unir2Nodos("G", "I", "GI", 5);
-	G.unir2Nodos("H", "I", "HI", 7);*/
+	G.unir2Nodos("H", "I", "HI", 7);
+
+	G.kruskalAlgorithm();
+	G.primsAlgorithm("A");
 
 				
-	G.kruskalAlgorithm();
-
+	
 	G.buscarNodo("A");
 	/*G.insertarNodo("Aaron", 19);
 	G.insertarNodo("Knoww", 14);
