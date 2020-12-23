@@ -72,7 +72,7 @@ int main()
 
 	
 	// GRAFO 3 FUNCIONA.
-	G.unir2Nodos("A", "B", "AB", 6);
+	/*G.unir2Nodos("A", "B", "AB", 6);
 	G.unir2Nodos("A", "D", "AD", 10);
 	G.unir2Nodos("A", "G", "AG", 8);
 	G.unir2Nodos("B", "C", "BC", 11);
@@ -85,8 +85,36 @@ int main()
 	G.unir2Nodos("F", "I", "FI", 6);
 	G.unir2Nodos("G", "H", "GH", 5);
 	G.unir2Nodos("G", "I", "GI", 5);
-	G.unir2Nodos("H", "I", "HI", 7);
+	G.unir2Nodos("H", "I", "HI", 7);*/
 
+	//GRAFO 4
+	/*G.unir2Nodos("A", "B", "AB", 3);
+	G.unir2Nodos("A", "D", "AD", 7);
+	G.unir2Nodos("B", "C", "BC", 4);
+	G.unir2Nodos("B", "D", "BD", 2);
+	G.unir2Nodos("D", "C", "DC", 5);*/
+
+	G.unir2Nodos("A", "B", "AB", 3);
+	G.unir2Nodos("A", "C", "AC", 7);
+	G.unir2Nodos("A", "D", "AD", 5);
+	G.unir2Nodos("B", "C", "BC", 5);
+	G.unir2Nodos("B", "E", "BE", 1);
+	G.unir2Nodos("C", "D", "CD", 2);
+	G.unir2Nodos("C", "E", "CE", 2);
+	G.unir2Nodos("C", "F", "CF", 3);
+	G.unir2Nodos("D", "F", "DF", 5);
+	G.unir2Nodos("E", "F", "EF", 4);
+	G.unir2Nodos("E", "G", "EG", 3);
+	G.unir2Nodos("F", "H", "FH", 2);
+	G.unir2Nodos("G", "H", "GH", 2);
+	G.unir2Nodos("G", "I", "GI", 7);
+	G.unir2Nodos("H", "I", "HI", 2);
+
+
+
+
+
+	G.dijkstraAlgorithm("A");
 	G.kruskalAlgorithm();
 	G.primsAlgorithm("A");
 	cout << "\nEl peso de kruskal es " << G.pesoKruskal() << endl;

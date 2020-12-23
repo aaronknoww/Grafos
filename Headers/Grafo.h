@@ -20,7 +20,7 @@ public:
 	bool primsAlgorithm(const string&);//-----------> Ejecuta este algoritmo solo para calcular el Minimum Spannig Tree.
 	int  pesoKruskal();//---------------------------> Calcula el peso de todas las aristas en la lista de kruskal.
 	int  pesoPrim();//------------------------------> Calcula el peso de todas las aristas en la lista de kruskal.
-
+	bool dijkstraAlgorithm(const string&);//--------> Encuetra todas las aristas que forman el camino mas corto del nodo que lo llama y algun otro nodo.
 	vector<string> listKruskal;//-------------------> Guarda las aristas que forman el minimum spanning tree.
 	vector<string> listaPrim;//---------------------> Guarda las aristas que forman el minimum spanning tree de prim.
 private:
@@ -32,12 +32,14 @@ private:
 		//nodoV(string nombre) : nombre(nombre), nodoSig(nullptr), dato(0){}
 		//~nodoV();
 		
-		nodoV() : nombreV(), dato(0), sig(nullptr){}
+		nodoV() : nombreV(), dato(0), sig(nullptr),visitado(false){}
 		string nombreV;
 		TD dato;
-		nodoV* sig;//-------> Para poder enlazar los nodos y hacer conjuntos.
-		set<string> setLista;// Se guarda el nombre o clave de las aristas que tiene el nodo.
-		
+		nodoV* sig;//--------------------> Para poder enlazar los nodos y hacer conjuntos.
+		set<string> setLista;//----------> Se guarda el nombre o clave de las aristas que tiene el nodo.
+		map<string, int> listaDijktra;//-> Guarda las arista que forman el camino mas corto de este nodo a otro en la grafica.
+		bool visitado;//-----------------> Se marca true cuando algun algoritmo que lo necesite lo visite.
+
 
 	
 	private:
@@ -54,13 +56,13 @@ private:
 		nodoV * nodo2; // Guarda la direccion del nodo2 o vertice que se conecta en esta arista
 	};
 	
-	unordered_map<string, nodoV*> hashNodo;//-------> Se utiliza una tabla hash para guardar los nodos utilizando su nombre.
-	unordered_map<string, aristaE*> hashArista;//---> Se utiliza una tabla hash para guardar las aristas
+	unordered_map<string, nodoV*> hashNodo;//--------> Se utiliza una tabla hash para guardar los nodos utilizando su nombre.
+	unordered_map<string, aristaE*> hashArista;//----> Se utiliza una tabla hash para guardar las aristas
 	multimap<int, string> aristasOrdenadas;//--------> Guarda el peso y el nombre de las aristas ademas de ordenarlas. 
 	
-	nodoV* nuevoNodo;//Poder insertar nodos.
-	aristaE* nuevaArista;// Poder insertar Aristas.
-	int pos;
+	nodoV* nuevoNodo;//-----> Poder insertar nodos.
+	aristaE* nuevaArista;//-> Poder insertar Aristas.
+	//int pos;
 	
 	//--------------------------------- FUNCIONES PRIVADAS -------------------------------------//
 
@@ -70,4 +72,6 @@ private:
 	bool _unionNodoPrim(aristaE*&);//---------> Verifica si se puede unir los nodos y los agrega a lista kruskal
 	bool _agregarAristaPrism(nodoV*);//-------> Agraga las aristas del nodo a una tabla de aristas ordenadas por peso. 
 	bool _inicializarNodo();//----------------> Inicializa todo los punteros sig de los nodos.
+	string _aristaMenorPeso(map<string, int>&);//--> Regresa el nombre de la arista con menor peso.
+	bool _actualizarAristasDjk(map<string, int>&, string&, nodoV*);//--> Actualiza los pesos y aristas en el algoritmo dijkstra
 };

@@ -9,7 +9,7 @@ Grafo<TD>::Grafo()
 	nuevoNodo = nullptr;
 	hashNodo.max_load_factor(.65f);// Se estable un valor de carga maximo del 65%, para evitar colisiones.
 	hashArista.max_load_factor(.65f);// Se estable un valor de carga maximo del 65%, para evitar colisiones.
-	pos = 0;
+	//pos = 0;
 				
 	return;
 }
@@ -315,6 +315,74 @@ int Grafo<TD>::pesoPrim()
 		return 0;
 }
 
+template<typename TD>
+bool Grafo<TD>::dijkstraAlgorithm(const string& nodoI)
+{
+	// nodoI--> Ingresa el nombre del nodo en el que se quiere calcular el camino mas corto.
+
+	if (hashNodo.find(nodoI) != hashNodo.end())
+	{
+		// Entra porque existe el nodo.
+
+		map<string, int> revisar;// Guarda la lista de aristas por revisar.
+		nodoV* nodoP = nullptr;//-------> Puntero para guardar el nodo en el que se va iniciar el algoritmo.
+		nodoP = hashNodo.at(nodoI);//---> Toma la direccion del nodo inicial.
+		int contadorNodo=0;
+		for (auto iter = nodoP->setLista.begin(); iter != nodoP->setLista.end(); iter++)
+		{
+			nuevaArista = hashArista.at(*iter);
+			revisar.insert(pair<string, int>(*iter, nuevaArista->peso));// Se ingresan las aristas del nodo incial para poder empezar el algoritmo.
+
+		}
+		
+		nodoP->visitado = true;// Se marca como visitado.
+		contadorNodo++;
+		
+		aristaE* sigArista = nullptr;//-------------> Guarda la direccion de la arista que se va analizar.
+		
+		
+
+
+
+
+
+		while (contadorNodo<hashNodo.size())
+		{
+			string menor = _aristaMenorPeso(revisar);//-> Se obtiene la el nombre de la arista de menor peso en la estructura REVISAR.
+			sigArista = hashArista.at(menor);//---------> Se obtiene la direccion de la arista con menor peso.
+
+
+			if (sigArista->nodo1->visitado == false)
+			{
+				// Como no se ha visitado ese nodo entonces se tiene que insertar sus aristas.
+				nodoP->listaDijktra.insert(pair<string, int>(menor, revisar.at(menor)));// Se inserta en la lista del nodo.
+				_actualizarAristasDjk(revisar, menor, sigArista->nodo1);
+				sigArista->nodo1->visitado = true;
+				contadorNodo++;
+			}
+			else if (sigArista->nodo2->visitado == false)
+			{
+				// Como no se ha visitado ese nodo entonces se tiene que insertar sus aristas.
+				nodoP->listaDijktra.insert(pair<string, int>(menor, revisar.at(menor)));// Se inserta en la lista del nodo.
+				_actualizarAristasDjk(revisar, menor, sigArista->nodo2);
+				sigArista->nodo2->visitado = true;
+				contadorNodo++;
+			}
+			else
+			{
+				//Como los dos nodos ya han sido visitados se elimina esa arista.
+				revisar.erase(menor);
+			}
+		}
+		
+
+
+
+	}
+	else
+		return false;
+}
+
 
 //----------------------------------- FUNCIONES AUXILIARES PRIVADAS --------------------------------//
 
@@ -511,5 +579,70 @@ bool Grafo<TD>::_inicializarNodo()
 	}
 	else
 		return false;
+}
+
+template<typename TD>
+string Grafo<TD>::_aristaMenorPeso(map<string, int>& buscar)
+{
+	// buscar--> Ingresa un mapa que contiene la clave y el peso actual de las aristas.
+	
+	string arista;
+	int menor = 999999;
+	for (auto& iter : buscar)
+	{
+		if (menor>iter.second)
+		{
+			menor = iter.second;// Se obtiene el peso del  cada elmento en esa posision en el arreglo.
+			arista = iter.first;// Se obtiene el nombre de la arista que tiene menor peso.
+		}
+
+	}
+	return arista;
+}
+
+template<typename TD>
+bool Grafo<TD>::_actualizarAristasDjk(map<string, int>& revisar, string& arista, nodoV* nodo)
+{
+	// revisar---> Recibe una referencia del mapa que guarda las aristas por revisar.
+	// arista----> Recibe el nombre de la arista en la que se esta trabajando y que se debe de borrar de las aristas por revisar.
+	// nodo------> Recibe un puntero del nodo que va agregar sus aristas despues de modificarle los pesos.
+
+	
+	int peso_actual = revisar.at(arista);// Guarda el peso que se le debe de sumar a los pesos de las aristas del nodo.
+	int suma = 0;
+	revisar.erase(arista);//------------> Borra la arista que se acaba de insertar en el nodo porque ya fue revisada.
+
+	for (auto iterl = nodo->setLista.begin(); iterl != nodo->setLista.end(); iterl++)// Recorre todas las aristas del nodo.
+	{
+		if (iterl!=nodo->setLista.find(arista))// Para evitar agragar la arista que ya se agrego a la lista dijkstra
+		{
+			
+			// Entra porque no es la arista que ya se agrego.
+			if (revisar.find(*iterl) != revisar.end())
+			{
+				//Como ya esta esa arista en el mapa revisar hay que ver cual peso se debe de quedar.
+				
+				nuevaArista = hashArista.at(*iterl);// Se obtiene la direccion de la arista.
+				suma = nuevaArista->peso + peso_actual;
+				if (revisar.at(*iterl) > suma)
+				{
+					revisar.at(*iterl) = suma;// Se asigna el nuevo peso a una clave que ya existe.
+				}
+				// Como fue menor no se agrega el peso.
+			}
+			else
+			{
+				nuevaArista = hashArista.at(*iterl);// Se obtiene la direccion de la arista.
+				suma = nuevaArista->peso + peso_actual;
+				revisar[*iterl] = suma;// Se agrega la nueva clave y peso a la estructura revisar.
+			}
+
+			
+		}
+	}
+	
+
+
+	return true;
 }
 
